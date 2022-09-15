@@ -1,11 +1,8 @@
-// SPDX-License-Identifier: MIT
-
-pragma solidity ^0.8.0;
-
-contract Demo {
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.9;
 
 
-    // Struct
+contract Payments {
     struct Payment {
         uint amount;
         uint timestamp;
@@ -20,11 +17,15 @@ contract Demo {
 
     mapping(address => Balance) public balances;
 
+    function currentBalance() public view returns(uint) {
+        return address(this).balance;
+    }
+
     function getPayment(address _addr, uint _index) public view returns(Payment memory) {
         return balances[_addr].payments[_index];
     }
 
-    function pay(string memory message) public payable {
+    function pay(string memory message) public payable returns(uint) {
         uint paymentNum = balances[msg.sender].totalPayments;
         balances[msg.sender].totalPayments++;
 
@@ -36,5 +37,7 @@ contract Demo {
         );
 
         balances[msg.sender].payments[paymentNum] = newPayment;
+
+        return msg.value;
     }
 }
